@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <style>
+        body{
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        main{
+            width:40%;
+            max-width: 40%;
+        }
+    </style>
+</head>
+<body class="bg-secondary">
+    <main>
+        <form action="" class="">
+            <h1 class="text-center mt-5">TO DO LIST</h1>
+            <div class="d-flex gap-3 mt-3">
+                <input type="text" id="todoInput" placeholder="whrite something to do..." class="form-control col-9">
+                <button class="btn btn-primary col-3" id="btn" type="submit">TO DO</button>
+            </div>
+        </form>
+
+        <div class="card-space">
+            <div class="card mt-3">
+                <div class="card-body">
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <button class="btn btn-danger delete-btn">Delete</button>
+                    <button class="btn btn-success update-btn">Update</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        const form = document.querySelector('form');
+        const btn = document.getElementById('btn');
+        const input = document.getElementById('todoInput')
+        const cardSpace = document.querySelector('.card-space');
+        const cardBody = document.querySelectorAll('.card');
+        const deleteBtn = document.querySelectorAll('.delete-btn');
+        const updateBtn = document.querySelectorAll('.update-btn');
+
+
+        const addNewCard = (num, value)=>{
+            cardSpace.insertAdjacentHTML('beforeend',`
+            <div class="card mt-3">
+                <div class="card-body" id='${num}'>
+                    <p class="card-text"><span>${num}</span> | ${value}</p>
+                    <button class="btn btn-danger delete-btn">Delete</button>
+                    <button class="btn btn-success update-btn">Update</button>
+                </div>
+            </div>
+            `);
+        }
+
+        const DeleteCard = (element) => {
+            parent.element.id()
+        }
+
+        form.addEventListener('submit',(e)=>{
+            e.preventDefault(); 
+            
+            const inputValue = input.value.trim().replace(/[^a-zA-Z0-9]/g, '');
+
+            if(!inputValue){
+                alert('please write something to do');
+                return;
+            }
+            
+            const updatedCardBodies = document.querySelectorAll('.card-body');
+            const id = updatedCardBodies.length;
+            
+            addNewCard(id , inputValue);
+
+
+            form.reset();
+        })
+
+        
+
+        
+
+
+
+    </script>
+</body>
+</html>
