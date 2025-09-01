@@ -29,14 +29,16 @@
         </form>
 
         <div class="card-space">
-            <div class="card mt-3">
-                <div class="card-body">
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <button class="btn btn-danger delete-btn">Delete</button>
-                    <button class="btn btn-success update-btn">Update</button>
-                </div>
-            </div>
         </div>
+
+        <dialog id='mymodal'>
+            <form id="formModal">
+                <div class="card-body">
+                    <input class="label-control" id="inputModal">
+                    <button class="btn btn-success updateModal-btn" id="btnModal" type="submit">Update n°<span id="spanId"></span></button>
+                </div>
+            </form>
+        </dialog>
     </main>
     <script>
         const form = document.querySelector('form');
@@ -46,23 +48,47 @@
         const cardBody = document.querySelectorAll('.card');
         const deleteBtn = document.querySelectorAll('.delete-btn');
         const updateBtn = document.querySelectorAll('.update-btn');
+        const modal = document.getElementById('mymodal');
+        const inputModal = document.getElementById('inputModal')
+        const modalBtn = document.getElementById('btnModal')
+        const span = document.getElementById('spanId');
+        const formModal = document.getElementById('formModal');
+        const dataTask = [];
 
 
         const addNewCard = (num, value)=>{
-            cardSpace.insertAdjacentHTML('beforeend',`
+
+            dataTask.push({
+                id:`${num}`,
+                texte:`${value}`
+            });
+           
+            cardSpace.innerHTML = "";
+
+            dataTask.forEach((element)=>{
+            cardSpace.innerHTML += `
             <div class="card mt-3">
-                <div class="card-body" id='${num}'>
-                    <p class="card-text"><span>${num}</span> | ${value}</p>
+                <div class="card-body" id='${element.id}'>
+                    <p class="card-text"><span>${element.id}</span> | ${element.texte}</p>
                     <button class="btn btn-danger delete-btn">Delete</button>
-                    <button class="btn btn-success update-btn">Update</button>
+                    <button class="btn btn-success update-btn" onclick="UpdateTask(this)">Update</button>
                 </div>
             </div>
-            `);
+            `
+            })
+
         }
 
-        const DeleteCard = (element) => {
-            parent.element.id()
+        const UpdateTask = (button) =>{
+            dataTask.forEach((element)=>{
+                if(element.id===button.parentElement.id){
+                   span.textContent = element.id;
+                   inputModal.value = element.texte;
+                   modal.showModal(); 
+                }
+            })
         }
+
 
         form.addEventListener('submit',(e)=>{
             e.preventDefault(); 
@@ -73,6 +99,8 @@
                 alert('please write something to do');
                 return;
             }
+
+
             
             const updatedCardBodies = document.querySelectorAll('.card-body');
             const id = updatedCardBodies.length;
@@ -83,7 +111,16 @@
             form.reset();
         })
 
-        
+        formModal.addEventListener('submit',(e)=>{
+            e.preventDefault();
+            
+            dataTask.forEach(element => {
+                if(element.id===span.textContent){
+                    element.texte = inputModal.value;
+                    console.log(dataTask);
+                }
+            });
+        })
 
         
 
