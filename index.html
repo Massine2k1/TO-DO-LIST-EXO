@@ -18,7 +18,7 @@
         }
 
         #mymodal{
-            width:350px;
+            width:50%;
             max-width:90vw;
         }
     </style>
@@ -39,11 +39,11 @@
     <dialog id='mymodal' class="p-0 border-0 rounded-3 shadow">
         <form id="formModal">
             <div class="card-body d-flex flex-column gap-3 p-4">
-                <h5 class="text-center mb-2">Modifier la tâche</h5>
                 <input class="form-control" id="inputModal" placeholder="Nouvelle valeur">
                 <button class="btn btn-success w-100 updateModal-btn" id="btnModal" type="submit">
-                    Update n°<span id="spanId"></span>
+                    Update n°<span class="spanId"></span>
                 </button>
+                <button class="btn btn-danger cancel" type="button">Cancel</button>
             </div>
         </form>
     </dialog>
@@ -59,16 +59,26 @@
         const modal = document.getElementById('mymodal');
         const inputModal = document.getElementById('inputModal')
         const modalBtn = document.getElementById('btnModal')
-        const span = document.getElementById('spanId');
+        const span = document.querySelector('.spanId');
         const formModal = document.getElementById('formModal');
+        const cancel = document.querySelector('.cancel');
         let id = 1;
         let dataTask = [];
 
-
-        const InsertCard = () =>{
+        if(localStorage.getItem("data")){
+            dataTask = JSON.parse(localStorage.getItem("data"));
+            if(dataTask.length > 0){
+                dataId = dataTask.map(element => Number(element.id));
+                id = Math.max(...dataId);
+           }
+            InsertCard();
+        }
+        
+        function InsertCard(){
             dataTask.forEach((element)=>{
             cardSpace.innerHTML += `
             <div class="card mt-3">
+                <div class="card-header text-primary">Task n°<span>${element.order}</span></div>
                 <div class="card-body" id='${element.id}'>
                     <p class="card-text"><span>${element.order}</span> | ${element.texte}</p>
                     <button class="btn btn-danger delete-btn" onclick="deleteTask(this)">Delete</button>
@@ -105,11 +115,10 @@
             dataTask.forEach((element)=>{
                 if(element.id===button.parentElement.id){
                    span.textContent = element.order;
+                   span.id = element.id;
                    inputModal.value = element.texte;
                    modal.showModal(); 
                 }
-
-                console.log(dataTask.length);
             })
         }
 
@@ -124,15 +133,13 @@
                 return;
             }
 
-
-            
             let order = dataTask.length + 1;
             
             addNewCard(id,inputValue);
 
-            id++;
-            console.log(id);
+            localStorage.setItem("data", JSON.stringify(dataTask));
 
+            id++;
             form.reset();
         })
 
@@ -140,29 +147,27 @@
             e.preventDefault();
             
             dataTask.forEach(element => {
-                if(element.id===span.textContent){
+                if(element.id===span.id){
                     element.texte = inputModal.value;
                 }
             });
 
+            localStorage.setItem("data", JSON.stringify(dataTask));
             modal.close();
-
             cardSpace.innerHTML = "";
-
             InsertCard();
-            console.log(dataTask.length);
-
         })
 
         const deleteTask = (button) => {
             dataTask = dataTask.filter(item => item.id !== button.parentElement.id);
             recalculerOrder();
+            ;
             cardSpace.innerHTML = "";
             InsertCard();
+            localStorage.setItem("data", JSON.stringify(dataTask));
         }
 
-    
-
+        cancel.onclick = () => modal.close();
     </script>
 </body>
 </html>
